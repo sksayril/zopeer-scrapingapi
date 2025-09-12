@@ -1,0 +1,44 @@
+{
+  "scrapedAt": "2025-09-09T07:24:06.013Z",
+  "source": "DMart",
+  "product": {
+    "name": "Dettol Antiseptic Liquid: 250 ml",
+    "title": "Dettol Antiseptic Liquid: 250 ml",
+    "mrp": 170,
+    "sellingPrice": 160,
+    "discount": 10,
+    "discountPercent": 6,
+    "images": [
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_5_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_6_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_7_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_8_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_9_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_10_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_11_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_12_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_13_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_14_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_15_B.jpg",
+      "https://cdn.dmart.in/images/products/JUN140003763xx5JUN25_16_B.jpg"
+    ],
+    "variants": [
+      {
+        "volume": "250 ml",
+        "pricePerUnit": "₹ 0.64 / 1 ml",
+        "isSelected": true
+      },
+      {
+        "volume": "550 ml",
+        "pricePerUnit": "₹ 0.48 / 1 ml"
+      },
+      {
+        "volume": "1 L",
+        "pricePerUnit": "₹ 0.51 / 1 ml"
+      }
+    ],
+    "description": "Key FeaturesDettol Antiseptic Liquid protects you and your family from 100 illness causing germs. It comes in a fresh pine fragrance. The topical antiseptic liquid sanitizes your home and helps maintain your personal hygiene. The Dettol first aid antiseptic liquid can be used to protect against infection from cuts and scratches, disinfect toys, and sanitize baby wear leaving everything clean and fresh. It can also be used as a household disinfectant and cleaner on surfaces or in laundry cleaning to kill germs.\n\nAbout the BrandWith 80 years of experience, Dettol stands as one of the most trusted and reliable brand. The brand has always stayed at the forefront of emerging consumer needs by developing new ways to protect people against germs.",
+    "brand": "Dettol"
+  },
+  "url": "https://www.dmart.in/product/dettol-antiseptic-liquid-pantiseptic0dett1xx170222?selectedProd=998004"
+}

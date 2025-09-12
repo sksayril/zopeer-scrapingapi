@@ -1,0 +1,141 @@
+{
+  "url": "https://www.bigbasket.com/pd/10000067/fresho-capsicum-green-1-kg/?nc=smart_basket&nc=My+Smart+Basket&t_pg=%252Foct-homepage-t1%252F&t_p=Oct-T1_2023&t_pos_sec=3&t_ch=desktop&t_pos_item=2&t_s=Capsicum+-+Green+%2528Loose%2529",
+  "scrapedAt": "2025-09-08T10:36:06.730Z",
+  "source": "BigBasket",
+  "product": {
+    "title": "Capsicum - Green (Loose)",
+    "brand": {
+      "name": "fresho!",
+      "slug": "fresho",
+      "url": "/pb/fresho/"
+    },
+    "packSize": "1 kg",
+    "images": [
+      "https://www.bbassets.com/media/uploads/p/xxl/10000067_27-fresho-capsicum-green.jpg",
+      "https://www.bbassets.com/media/uploads/p/xxl/10000067-2_36-fresho-capsicum-green.jpg",
+      "https://www.bbassets.com/media/uploads/p/xxl/10000067-3_7-fresho-capsicum-green.jpg",
+      "https://www.bbassets.com/media/uploads/p/xxl/10000067-4_6-fresho-capsicum-green.jpg",
+      "https://www.bbassets.com/media/uploads/p/xxl/10000067-5_5-fresho-capsicum-green.jpg",
+      "https://www.bbassets.com/media/uploads/p/xxl/10000067-6_4-fresho-capsicum-green.jpg",
+      "https://www.bbassets.com/media/uploads/p/xxl/10000067-7_2-fresho-capsicum-green.jpg"
+    ],
+    "discount": {
+      "mrp": "160",
+      "d_text": "50% OFF",
+      "d_avail": "true",
+      "prim_price": {
+        "sp": "80",
+        "icon": {
+          "base_url": null,
+          "image": null,
+          "format": null
+        },
+        "desc": "",
+        "base_price": "80",
+        "base_unit": "kg"
+      },
+      "sec_price": {
+        "sp": null,
+        "icon": null,
+        "desc": null,
+        "background": null
+      },
+      "offer_entry_text": "Har Din Sasta!",
+      "offer_available": "true"
+    },
+    "packageSizes": [
+      {
+        "id": "10000067",
+        "description": "Capsicum - Green (Loose)",
+        "weight": "1 kg",
+        "discount": {
+          "mrp": "160",
+          "d_text": "50% OFF",
+          "d_avail": "true",
+          "prim_price": {
+            "sp": "80",
+            "icon": {
+              "base_url": null,
+              "image": null,
+              "format": null
+            },
+            "desc": "",
+            "base_price": "80",
+            "base_unit": "kg"
+          },
+          "sec_price": {
+            "sp": null,
+            "icon": null,
+            "desc": null,
+            "background": null
+          },
+          "offer_entry_text": "Har Din Sasta!",
+          "offer_available": "true"
+        }
+      },
+      {
+        "id": "10000069",
+        "description": "Capsicum - Green (Loose)",
+        "weight": "500 g",
+        "discount": {
+          "mrp": "50",
+          "d_text": "24% OFF",
+          "d_avail": "true",
+          "prim_price": {
+            "sp": "38",
+            "icon": {
+              "base_url": null,
+              "image": null,
+              "format": null
+            },
+            "desc": "",
+            "base_price": "0.07",
+            "base_unit": "g"
+          },
+          "sec_price": {
+            "sp": null,
+            "icon": null,
+            "desc": null,
+            "background": null
+          },
+          "offer_entry_text": "",
+          "offer_available": "false"
+        }
+      },
+      {
+        "id": "10000068",
+        "description": "Capsicum - Green (Loose)",
+        "weight": "250 g",
+        "discount": {
+          "mrp": "25",
+          "d_text": "24% OFF",
+          "d_avail": "true",
+          "prim_price": {
+            "sp": "19",
+            "icon": {
+              "base_url": null,
+              "image": null,
+              "format": null
+            },
+            "desc": "",
+            "base_price": "0.07",
+            "base_unit": "g"
+          },
+          "sec_price": {
+            "sp": null,
+            "icon": null,
+            "desc": null,
+            "background": null
+          },
+          "offer_entry_text": "",
+          "offer_available": "false"
+        }
+      }
+    ],
+    "productId": "10000067",
+    "productUrl": "/pd/10000067/fresho-capsicum-green-1-kg/",
+    "information": {
+      "category": "ElectronicsBeauty & HygieneFashionFood CourtPharmacy & WellnessFruits & VegetablesFoodgrains, Oil & MasalaBakery, Cakes & DairyBeveragesSnacks & Branded FoodsCleaning & HouseholdKitchen, Garden & PetsEggs, Meat & FishGourmet & World FoodBaby CarePaan CornerAudio devicesCameras & AccessoriesElectrical AccessoriesHome AppliancesKitchen AppliancesPersonal Care & GroomingPhone & Laptop AccessoryPhone, Laptop & TabletsSmart WearablesTVs & MonitorsEarbudsHeadphonesNeckbandsSpeakers & SoundbarsWired EarphonesDelivery in 5 mins Select LocationDelivery in 5 mins Select LocationLogin/ Sign UpShop byCategoryElectronicsBeauty & HygieneFashionFood CourtPharmacy & WellnessFruits & VegetablesFoodgrains, Oil & MasalaBakery, Cakes & DairyBeveragesSnacks & Branded FoodsCleaning & HouseholdKitchen, Garden & PetsEggs, Meat & FishGourmet & World FoodBaby CarePaan CornerAudio devicesCameras & AccessoriesElectrical AccessoriesHome AppliancesKitchen AppliancesPersonal Care & GroomingPhone & Laptop AccessoryPhone, Laptop & TabletsSmart WearablesTVs & MonitorsEarbudsHeadphonesNeckbandsSpeakers & SoundbarsWired EarphonesExotic Fruits & VeggiesExotic Fruits & VeggiesTeaTeaGheeGheeNandhiniNandhiniHome/fruits & vegetables/fresh vegetables/cucumber & capsicum"
+    }
+  }
+}

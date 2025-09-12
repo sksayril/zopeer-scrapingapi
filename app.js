@@ -1,0 +1,82 @@
+require("dotenv").config()
+require("./utilities/database")
+var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+var cors = require('cors');
+
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var amazonRouter = require('./routes/amazon');
+var flipkartRouter = require('./routes/flipkart');
+var tatacliqRouter = require('./routes/tatacliq');
+var myntraRouter = require('./routes/myntra');
+var jiomartRouter = require('./routes/jiomart');
+var ajioRouter = require('./routes/ajio');
+var chromaRouter = require('./routes/chroma');
+var vijaysalesRouter = require('./routes/vijaysales');
+var nykaaRouter = require('./routes/nykaa');
+var oneMgRouter = require('./routes/oneMg');
+var pharmeasyRouter = require('./routes/pharmeasy');
+var netmedsRouter = require('./routes/netmeds');
+var blinkitRouter = require('./routes/blinkit');
+var swiggyInstamartRouter = require('./routes/swiggyInstamart');
+var zeptoRouter = require('./routes/zepto');
+var bigbasketRouter = require('./routes/bigbasket');
+var pepperfryRouter = require('./routes/pepperfry');
+var homecentreRouter = require('./routes/homecentre');
+var shoppersstopRouter = require('./routes/shoppersstop');
+var urbanicRouter = require('./routes/urbanic');
+var ikeaRouter = require('./routes/ikea');
+var bibaRouter = require('./routes/biba');
+var lifestylestoresRouter = require('./routes/lifestylestores');
+var medplusmartRouter = require('./routes/medplusmart');
+var truemedsRouter = require('./routes/truemeds');
+var apollopharmacyRouter = require('./routes/apollopharmacy');
+var wellnessforeverRouter = require('./routes/wellnessforever');
+var dmartRouter = require('./routes/dmart');
+var liciousRouter = require('./routes/licious');
+
+var app = express();
+
+app.use(logger('dev'));
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', indexRouter);
+app.use('/users', usersRouter);
+app.use('/api/amazon', amazonRouter);
+app.use('/api/flipkart', flipkartRouter);
+app.use('/api/tatacliq', tatacliqRouter);
+app.use('/api/myntra', myntraRouter);
+app.use('/api/jiomart', jiomartRouter);
+app.use('/api/ajio', ajioRouter);
+app.use('/api/chroma', chromaRouter);
+app.use('/api/vijaysales', vijaysalesRouter);
+app.use('/api/nykaa', nykaaRouter);
+app.use('/api/1mg', oneMgRouter);
+app.use('/api/pharmeasy', pharmeasyRouter);
+app.use('/api/netmeds', netmedsRouter);
+app.use('/api/blinkit', blinkitRouter);
+app.use('/api/swiggy-instamart', swiggyInstamartRouter);
+app.use('/api/zepto', zeptoRouter);
+app.use('/api/bigbasket', bigbasketRouter);
+app.use('/api/pepperfry', pepperfryRouter);
+app.use('/api/homecentre', homecentreRouter);
+app.use('/api/shoppersstop', shoppersstopRouter);
+app.use('/api/urbanic', urbanicRouter); 
+app.use('/api/ikea', ikeaRouter);
+app.use('/api/biba', bibaRouter);
+app.use('/api/lifestylestores', lifestylestoresRouter);
+app.use('/api/medplusmart', medplusmartRouter);
+app.use('/api/truemeds', truemedsRouter);
+app.use('/api/apollopharmacy', apollopharmacyRouter);
+app.use('/api/wellnessforever', wellnessforeverRouter);
+app.use('/api/dmart', dmartRouter);
+app.use('/api/licious', liciousRouter);
+
+module.exports = app;

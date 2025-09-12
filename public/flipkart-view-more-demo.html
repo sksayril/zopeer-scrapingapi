@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flipkart Enhanced Scraper - View More Offers Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .demo-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            border: 2px solid #f1f2f6;
+            border-radius: 15px;
+            background: #fafafa;
+        }
+        
+        .demo-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(243, 156, 18, 0.3);
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+        
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(155, 89, 182, 0.3);
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .status.loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .results {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .feature-list {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .feature-list h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .feature-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #ecf0f1;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .feature-list li:before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .example-url {
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            margin: 15px 0;
+            word-break: break-all;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ Flipkart Enhanced Scraper</h1>
+            <p>Automatic "View More Offers" Expansion & Comprehensive Data Extraction</p>
+        </div>
+        
+        <div class="content">
+            <div class="feature-list">
+                <h3>🚀 Enhanced Features</h3>
+                <ul>
+                    <li><strong>Auto-Expansion:</strong> Automatically clicks "View More Offers" buttons</li>
+                    <li><strong>Smart Detection:</strong> Identifies and expands all hidden offer sections</li>
+                    <li><strong>Comprehensive Extraction:</strong> Captures all offers including newly revealed ones</li>
+                    <li><strong>Intelligent Parsing:</strong> Multiple selector strategies for maximum coverage</li>
+                    <li><strong>Real-time Logging:</strong> Detailed console output for debugging</li>
+                    <li><strong>Duplicate Prevention:</strong> Removes duplicate offers automatically</li>
+                    <li><strong>Enhanced Details:</strong> Extracts bank names, percentages, and payment methods</li>
+                </ul>
+            </div>
+            
+            <div class="demo-section">
+                <h2>🔗 Product URL Input</h2>
+                <div class="input-group">
+                    <label for="productUrl">Flipkart Product URL:</label>
+                    <input type="url" id="productUrl" placeholder="https://www.flipkart.com/product-url" value="https://www.flipkart.com/canon-r100-mirrorless-camera-rf-s-18-45mm-f-4-5-6-3-stm/p/itm3bc65ea11d81b?pid=DLLGQAQYNT39ZJTG&lid=LSTDLLGQAQYNT39ZJTGWF2CZS&marketplace=FLIPKART&store=jek%2Fp31%2Ftrv&spotlightTagId=default_FkPickId_jek%2Fp31%2Ftrv&srno=b_1_1&otracker=browse&fm=organic&iid=76e1231b-2b47-499c-b8b0-3e9a8ddfe5cb.DLLGQAQYNT39ZJTG.SEARCH&ppt=browse&ppn=browse&ssid=qos0vkzni80000001756881034550">
+                </div>
+                
+                <div class="example-url">
+                    <strong>Example URL:</strong> Canon R100 Mirrorless Camera
+                </div>
+                
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="scrapeProduct()">
+                        🚀 Scrape Product (Full)
+                    </button>
+                    <button class="btn btn-success" onclick="testViewMoreExpansion()">
+                        🧪 Test View More Expansion
+                    </button>
+                    <button class="btn btn-warning" onclick="scrapeWithImages()">
+                        📸 Scrape with Images
+                    </button>
+                    <button class="btn btn-info" onclick="scrapeAndSave()">
+                        💾 Scrape and Save
+                    </button>
+                </div>
+            </div>
+            
+            <div id="status" class="status hidden"></div>
+            
+            <div id="results" class="results hidden"></div>
+            
+            <div class="demo-section">
+                <h2>📊 API Endpoints</h2>
+                <div class="feature-list">
+                    <h4>Available Routes:</h4>
+                    <ul>
+                        <li><code>POST /api/flipkart/scrape-product</code> - Full product scraping</li>
+                        <li><code>POST /api/flipkart/test-view-more-expansion</code> - Test view more functionality</li>
+                        <li><code>POST /api/flipkart/view-more-offers</code> - Extract view more info only</li>
+                        <li><code>POST /api/flipkart/scrape-with-images</code> - Scrape + download images</li>
+                        <li><code>POST /api/flipkart/scrape-and-save</code> - Scrape + save to file</li>
+                        <li><code>GET /api/flipkart/health</code> - Health check</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api/flipkart';
+        
+        function showStatus(message, type = 'loading') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.classList.remove('hidden');
+        }
+        
+        function showResults(data) {
+            const results = document.getElementById('results');
+            results.textContent = JSON.stringify(data, null, 2);
+            results.classList.remove('hidden');
+        }
+        
+        function hideStatus() {
+            document.getElementById('status').classList.add('hidden');
+        }
+        
+        async function makeRequest(endpoint, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                throw new Error(`Request failed: ${error.message}`);
+            }
+        }
+        
+        async function scrapeProduct() {
+            const url = document.getElementById('productUrl').value.trim();
+            if (!url) {
+                showStatus('Please enter a valid Flipkart product URL', 'error');
+                return;
+            }
+            
+            showStatus('🚀 Starting comprehensive product scraping with automatic view more expansion...', 'loading');
+            
+            try {
+                const result = await makeRequest('/scrape-product', { url });
+                hideStatus();
+                showResults(result);
+                
+                if (result.success) {
+                    const offersCount = result.data.offers ? result.data.offers.length : 0;
+                    const viewMoreInfo = result.data.viewMoreOffers;
+                    
+                    console.log(`✅ Scraping completed! Found ${offersCount} offers`);
+                    if (viewMoreInfo && viewMoreInfo.exists) {
+                        console.log(`📊 View More Info: ${viewMoreInfo.text} (${viewMoreInfo.count} offers)`);
+                    }
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+                console.error('Scraping error:', error);
+            }
+        }
+        
+        async function testViewMoreExpansion() {
+            const url = document.getElementById('productUrl').value.trim();
+            if (!url) {
+                showStatus('Please enter a valid Flipkart product URL', 'error');
+                return;
+            }
+            
+            showStatus('🧪 Testing view more offers expansion specifically...', 'loading');
+            
+            try {
+                const result = await makeRequest('/test-view-more-expansion', { url });
+                hideStatus();
+                showResults(result);
+                
+                if (result.success) {
+                    const analysis = result.data.analysis;
+                    console.log(`🧪 Test completed! Analysis:`, analysis);
+                    console.log(`📊 Total offers: ${analysis.totalOffers}`);
+                    console.log(`📊 Regular offers: ${analysis.offersBreakdown.regularOffers}`);
+                    console.log(`📊 View more offers: ${analysis.offersBreakdown.viewMoreOffers}`);
+                    console.log(`📊 Expansion status: ${analysis.expandedStatus}`);
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+                console.error('Test error:', error);
+            }
+        }
+        
+        async function scrapeWithImages() {
+            const url = document.getElementById('productUrl').value.trim();
+            if (!url) {
+                showStatus('Please enter a valid Flipkart product URL', 'error');
+                return;
+            }
+            
+            showStatus('📸 Starting product scraping with image downloads...', 'loading');
+            
+            try {
+                const result = await makeRequest('/scrape-with-images', { url, downloadImages: true });
+                hideStatus();
+                showResults(result);
+                
+                if (result.success) {
+                    const imagesDownloaded = result.data.imagesDownloaded || 0;
+                    console.log(`📸 Scraping with images completed! Downloaded ${imagesDownloaded} images`);
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+                console.error('Image scraping error:', error);
+            }
+        }
+        
+        async function scrapeAndSave() {
+            const url = document.getElementById('productUrl').value.trim();
+            if (!url) {
+                showStatus('Please enter a valid Flipkart product URL', 'error');
+                return;
+            }
+            
+            showStatus('💾 Starting product scraping and saving to file...', 'loading');
+            
+            try {
+                const result = await makeRequest('/scrape-and-save', { url });
+                hideStatus();
+                showResults(result);
+                
+                if (result.success) {
+                    console.log(`💾 Scraping and saving completed! File saved to: ${result.data.filepath}`);
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+                console.error('Save error:', error);
+            }
+        }
+        
+        // Auto-fill example URL on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Flipkart Enhanced Scraper Demo loaded!');
+            console.log('📋 This demo showcases automatic "View More Offers" expansion');
+            console.log('🔍 The scraper will automatically click view more buttons and extract all hidden offers');
+        });
+    </script>
+</body>
+</html>
