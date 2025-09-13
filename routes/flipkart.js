@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const FlipkartScraper = require('../utilities/flipkartScraper');
+const FlipkartCategoryScraper = require('../utilities/flipkartCategoryScraper');
 
 // Flipkart Product Scraping API
 router.post('/scrape-product', async (req, res) => {
@@ -262,6 +263,97 @@ router.post('/test-view-more-expansion', async (req, res) => {
       message: 'Error occurred while testing view more offers expansion',
       error: error.message
     });
+  }
+});
+
+// Flipkart Category Scraping API
+router.post('/scrape-category', async (req, res) => {
+  const scraper = new FlipkartCategoryScraper();
+  
+  try {
+    const { url, page, pages } = req.body;
+    
+    if (!url || !url.includes('flipkart.com')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid Flipkart.com category URL'
+      });
+    }
+
+    let result;
+    
+    if (page) {
+      // Scrape single page
+      result = await scraper.scrapeCategoryPage(url, parseInt(page));
+    } else if (pages && Array.isArray(pages)) {
+      // Scrape multiple specific pages
+      result = await scraper.scrapeSpecificPages(url, pages.map(p => parseInt(p)));
+    } else {
+      // Default: scrape first page
+      result = await scraper.scrapeCategoryPage(url, 1);
+    }
+    
+    res.json({
+      success: true,
+      message: 'Flipkart category scraped successfully',
+      data: result
+    });
+
+  } catch (error) {
+    console.error('Flipkart category scraping error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error occurred while scraping the Flipkart category',
+      error: error.message
+    });
+  } finally {
+    await scraper.close();
+  }
+});
+
+// Flipkart Category Scraping API (GET method)
+router.get('/scrape-category', async (req, res) => {
+  const scraper = new FlipkartCategoryScraper();
+  
+  try {
+    const { url, page, pages } = req.query;
+    
+    if (!url || !url.includes('flipkart.com')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid Flipkart.com category URL as query parameter'
+      });
+    }
+
+    let result;
+    
+    if (page) {
+      // Scrape single page
+      result = await scraper.scrapeCategoryPage(url, parseInt(page));
+    } else if (pages) {
+      // Scrape multiple specific pages (comma-separated)
+      const pageNumbers = pages.split(',').map(p => parseInt(p.trim())).filter(p => !isNaN(p));
+      result = await scraper.scrapeSpecificPages(url, pageNumbers);
+    } else {
+      // Default: scrape first page
+      result = await scraper.scrapeCategoryPage(url, 1);
+    }
+    
+    res.json({
+      success: true,
+      message: 'Flipkart category scraped successfully',
+      data: result
+    });
+
+  } catch (error) {
+    console.error('Flipkart category scraping error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error occurred while scraping the Flipkart category',
+      error: error.message
+    });
+  } finally {
+    await scraper.close();
   }
 });
 
