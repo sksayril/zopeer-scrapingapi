@@ -1,7 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const MyntraScraper = require('../utilities/myntraScraper');
+const MyntraCategoryScraper = require('../utilities/myntraCategoryScraper');
 
+router.post('/scrape-category', async (req, res) => {
+  const { url } = req.body;
+  if (!url || !url.includes('myntra.com')) {
+    return res.status(400).json({
+      success: false,
+      message: 'Please provide a valid Myntra.com category URL'
+    });
+  }
+  try {
+    const data = await MyntraCategoryScraper.scrapeCategory(url);
+    res.json({ success: true, data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
 // Myntra Product Scraping API
 router.post('/scrape-product', async (req, res) => {
   try {

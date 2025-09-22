@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const JioMartProductScraper = require('../utilities/jiomartScraper');
+const JioMartCategoryScraper = require('../utilities/jiomartCategoryScraper');
 const fs = require('fs-extra');
 const path = require('path');
 
@@ -25,6 +26,35 @@ const initializeScraper = async (req, res, next) => {
     });
   }
 };
+
+router.post('/scrape-category', initializeScraper, async (req, res) => {
+    try {
+        const { url } = req.body;
+        if (!url || !url.includes('jiomart.com')) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid URL',
+                message: 'Please provide a valid JioMart category URL'
+            });
+        }
+        console.log(`Scraping JioMart category: ${url}`);
+        const scraper = new JioMartCategoryScraper();
+        const categoryData = await scraper.scrapeCategory(url);
+        await scraper.close();
+        res.json({
+            success: true,
+            message: 'Category scraped successfully',
+            data: categoryData
+        });
+    } catch (error) {
+        console.error('Error scraping JioMart category:', error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to scrape category',
+            details: error.message
+        });
+    }
+});
 
 // Route to scrape a single JioMart product
 router.post('/scrape', initializeScraper, async (req, res) => {

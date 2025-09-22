@@ -1,6 +1,35 @@
 const express = require('express');
 const router = express.Router();
 const TataCliqScraper = require('../utilities/tatacliqScraper');
+const TataCliqCategoryScraper = require('../utilities/tatacliqCategoryScraper');
+
+// TataCliq Category Scraping API
+router.post('/scrape-category', async (req, res) => {
+    const { url } = req.body;
+
+    if (!url || !url.includes('tatacliq.com')) {
+        return res.status(400).json({
+            success: false,
+            message: 'Please provide a valid TataCliq category URL'
+        });
+    }
+
+    try {
+        const categoryData = await TataCliqCategoryScraper.scrapeCategory(url);
+        res.json({
+            success: true,
+            message: 'Category scraped successfully',
+            data: categoryData
+        });
+    } catch (error) {
+        console.error('TataCliq category scraping error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error occurred while scraping the category',
+            error: error.message
+        });
+    }
+});
 
 // TataCliq Product Scraping API - POST method
 router.post('/scrape-product', async (req, res) => {
