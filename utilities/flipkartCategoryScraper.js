@@ -443,15 +443,44 @@ class FlipkartCategoryScraper {
   }
 
   extractProductUrl($element) {
-    const href = $element.find('.VJA3rP, .wjcEIp, .DMMoT0').first().attr('href');
-    if (href) {
-      if (href.startsWith('http')) {
-        return href;
-      } else if (href.startsWith('/')) {
-        return 'https://www.flipkart.com' + href;
+    // Try multiple anchor selectors commonly used by Flipkart for product cards
+    const linkSelectors = [
+      'a.CGtC98',           // observed in provided snippet
+      'a[href*="/p/"]',
+      'a[href*="/product/"]',
+      'a[href*="/dp/"]',
+      '.VJA3rP a',
+      '.wjcEIp a',
+      '.DMMoT0 a',
+      'a'
+    ];
+
+    let href = '';
+    for (const sel of linkSelectors) {
+      const candidate = $element.find(sel).first().attr('href');
+      if (candidate && typeof candidate === 'string' && candidate.length > 1) {
+        href = candidate;
+        break;
       }
     }
-    return '';
+
+    if (!href) return '';
+
+    // Normalize to absolute URL
+    try {
+      if (href.startsWith('http')) {
+        return href;
+      }
+      if (href.startsWith('//')) {
+        return 'https:' + href;
+      }
+      // handle relative paths
+      return new URL(href, 'https://www.flipkart.com').href;
+    } catch (_) {
+      // Fallback simple concat for odd cases
+      if (href.startsWith('/')) return 'https://www.flipkart.com' + href;
+      return href;
+    }
   }
 
   extractRating($element) {

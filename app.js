@@ -37,6 +37,9 @@ var apollopharmacyRouter = require('./routes/apollopharmacy');
 var wellnessforeverRouter = require('./routes/wellnessforever');
 var dmartRouter = require('./routes/dmart');
 var liciousRouter = require('./routes/licious');
+var scrapingOperationsRouter = require('./routes/scrapingOperations');
+var jobProcessorRouter = require('./routes/jobProcessor');
+var scrapeLogsRouter = require('./routes/scrapeLogs');
 
 var app = express();
 
@@ -78,5 +81,8 @@ app.use('/api/apollopharmacy', apollopharmacyRouter);
 app.use('/api/wellnessforever', wellnessforeverRouter);
 app.use('/api/dmart', dmartRouter);
 app.use('/api/licious', liciousRouter);
+app.use('/api/scraping-operations', scrapingOperationsRouter);
+app.use('/api/job-processor', jobProcessorRouter);
+app.use('/api/scrape-logs', scrapeLogsRouter);
 
 module.exports = app;
