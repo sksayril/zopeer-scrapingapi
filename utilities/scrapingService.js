@@ -1,4 +1,5 @@
 const ScrapingOperation = require('../models/scrapingOperation.model');
+const ScrapeLog = require('../models/scrapeLog.model');
 const fs = require('fs').promises;
 const path = require('path');
 const puppeteer = require('puppeteer');
@@ -84,6 +85,22 @@ class ScrapingService {
         return undefined;
     }
 
+    // Helper method to update scrape log
+    async updateScrapeLog(operation, status, action = 'System') {
+        try {
+            const scrapeLog = await ScrapeLog.findOne({ operationId: operation._id });
+            if (scrapeLog) {
+                scrapeLog.status = status;
+                scrapeLog.action = action;
+                scrapeLog.when = new Date();
+                await scrapeLog.save();
+            }
+        } catch (error) {
+            console.error('Error updating scrape log:', error);
+            // Don't throw error to avoid breaking the main operation
+        }
+    }
+
     async createOperation(url, seller, type = 'product', options = {}) {
         try {
             if (!ScrapingOperation) {
@@ -127,6 +144,9 @@ class ScrapingService {
 
             // Mark as started
             await operation.markAsStarted();
+            
+            // Update scrape log to in_progress
+            await this.updateScrapeLog(operation, 'in_progress', 'System');
 
             // Get the appropriate scraper
             let ScraperModule = this.scrapers.get(operation.seller) || this.getScraperModuleForSeller(operation.seller);
@@ -174,6 +194,9 @@ class ScrapingService {
             await operation.markAsCompleted(scrapedData, totalProducts);
             operation.dataFile = filePath;
             await operation.save();
+            
+            // Update scrape log to success
+            await this.updateScrapeLog(operation, 'success', 'System');
 
             return {
                 operation,
@@ -187,6 +210,9 @@ class ScrapingService {
                     stack: error.stack,
                     name: error.name
                 });
+                
+                // Update scrape log to failed
+                await this.updateScrapeLog(operation, 'failed', 'System');
             }
             throw error;
         }

@@ -1,9 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const ScrapingOperation = require('../models/scrapingOperation.model');
+const ScrapeLog = require('../models/scrapeLog.model');
 const Joi = require('joi');
 const fs = require('fs').promises;
 const path = require('path');
+
+// Helper function to create scrape log
+async function createScrapeLog(operation, status, action = 'Manual') {
+    try {
+        const scrapeLog = new ScrapeLog({
+            when: new Date(),
+            platform: operation.seller,
+            type: operation.type,
+            url: operation.url,
+            category: operation.category || '',
+            status: status,
+            action: action,
+            operationId: operation._id
+        });
+        
+        await scrapeLog.save();
+        return scrapeLog;
+    } catch (error) {
+        console.error('Error creating scrape log:', error);
+        // Don't throw error to avoid breaking the main operation
+        return null;
+    }
+}
 
 // Validation schemas
 const createOperationSchema = Joi.object({
@@ -240,6 +264,9 @@ router.post('/', async (req, res) => {
         });
 
         await operation.save();
+
+        // Create initial scrape log
+        await createScrapeLog(operation, 'pending', 'Manual');
 
         res.status(201).json({
             success: true,
