@@ -24,7 +24,19 @@ const updateSchema = Joi.object({
 	category: Joi.string().allow('').optional(),
 	status: Joi.string().valid('pending','in_progress','success','failed','cancelled').optional(),
 	action: Joi.string().allow('').optional(),
-	operationId: Joi.string().optional()
+	operationId: Joi.string().optional(),
+	// Enhanced product statistics for updates
+	totalProducts: Joi.number().min(0).optional(),
+	scrapedProducts: Joi.number().min(0).optional(),
+	failedProducts: Joi.number().min(0).optional(),
+	progress: Joi.object({
+		current: Joi.number().min(0).optional(),
+		total: Joi.number().min(0).optional(),
+		percentage: Joi.number().min(0).max(100).optional()
+	}).optional(),
+	duration: Joi.number().min(0).optional(),
+	errorMessage: Joi.string().allow('').optional(),
+	retryCount: Joi.number().min(0).optional()
 }).min(1);
 
 // Create a new scrape log
@@ -172,9 +184,55 @@ router.put('/:id', async (req, res) => {
 			return res.status(400).json({ success: false, message: 'Validation error', errors: error.details.map(d => d.message) });
 		}
 
+		// If updating product statistics, also update the associated operation
+		if (value.operationId && (value.totalProducts !== undefined || value.scrapedProducts !== undefined || value.failedProducts !== undefined)) {
+			const operationUpdate = {};
+			if (value.totalProducts !== undefined) operationUpdate.totalProducts = value.totalProducts;
+			if (value.scrapedProducts !== undefined) operationUpdate.scrapedProducts = value.scrapedProducts;
+			if (value.failedProducts !== undefined) operationUpdate.failedProducts = value.failedProducts;
+			if (value.progress) operationUpdate.progress = value.progress;
+			if (value.duration !== undefined) operationUpdate.duration = value.duration;
+			if (value.errorMessage !== undefined) operationUpdate.errorMessage = value.errorMessage;
+			if (value.retryCount !== undefined) operationUpdate.retryCount = value.retryCount;
+
+			// Update the associated operation
+			await ScrapingOperation.findByIdAndUpdate(value.operationId, { $set: operationUpdate });
+		}
+
 		const updated = await ScrapeLog.findByIdAndUpdate(req.params.id, { $set: value }, { new: true });
 		if (!updated) return res.status(404).json({ success: false, message: 'Scrape log not found' });
-		return res.json({ success: true, message: 'Scrape log updated', data: updated });
+
+		// Fetch enhanced data with operation details
+		const enhancedLog = await ScrapeLog.findById(updated._id).populate('operationId');
+		const response = enhancedLog.toObject();
+
+		// Add product statistics if operation exists
+		if (response.operationId) {
+			response.totalProducts = response.operationId.totalProducts || 0;
+			response.scrapedProducts = response.operationId.scrapedProducts || 0;
+			response.failedProducts = response.operationId.failedProducts || 0;
+			response.duration = response.operationId.duration || 0;
+			response.progress = response.operationId.progress || { current: 0, total: 0, percentage: 0 };
+			response.errorMessage = response.operationId.errorMessage || null;
+			response.retryCount = response.operationId.retryCount || 0;
+			
+			// Calculate success rate
+			const totalProducts = response.totalProducts || 0;
+			const scrapedProducts = response.scrapedProducts || 0;
+			response.productSuccessRate = totalProducts > 0 ? 
+				Math.round((scrapedProducts / totalProducts) * 10000) / 100 : 0;
+			
+			// Add product statistics summary
+			response.productStats = {
+				total: totalProducts,
+				successful: scrapedProducts,
+				failed: response.failedProducts || 0,
+				successRate: response.productSuccessRate,
+				remaining: Math.max(0, totalProducts - scrapedProducts - (response.failedProducts || 0))
+			};
+		}
+
+		return res.json({ success: true, message: 'Scrape log updated', data: response });
 	} catch (err) {
 		console.error('Error updating scrape log:', err);
 		return res.status(500).json({ success: false, message: 'Failed to update scrape log', error: err.message });
@@ -189,9 +247,55 @@ router.patch('/:id', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Validation error', errors: error.details.map(d => d.message) });
         }
 
+        // If updating product statistics, also update the associated operation
+        if (value.operationId && (value.totalProducts !== undefined || value.scrapedProducts !== undefined || value.failedProducts !== undefined)) {
+            const operationUpdate = {};
+            if (value.totalProducts !== undefined) operationUpdate.totalProducts = value.totalProducts;
+            if (value.scrapedProducts !== undefined) operationUpdate.scrapedProducts = value.scrapedProducts;
+            if (value.failedProducts !== undefined) operationUpdate.failedProducts = value.failedProducts;
+            if (value.progress) operationUpdate.progress = value.progress;
+            if (value.duration !== undefined) operationUpdate.duration = value.duration;
+            if (value.errorMessage !== undefined) operationUpdate.errorMessage = value.errorMessage;
+            if (value.retryCount !== undefined) operationUpdate.retryCount = value.retryCount;
+
+            // Update the associated operation
+            await ScrapingOperation.findByIdAndUpdate(value.operationId, { $set: operationUpdate });
+        }
+
         const updated = await ScrapeLog.findByIdAndUpdate(req.params.id, { $set: value }, { new: true });
         if (!updated) return res.status(404).json({ success: false, message: 'Scrape log not found' });
-        return res.json({ success: true, message: 'Scrape log updated', data: updated });
+
+        // Fetch enhanced data with operation details
+        const enhancedLog = await ScrapeLog.findById(updated._id).populate('operationId');
+        const response = enhancedLog.toObject();
+
+        // Add product statistics if operation exists
+        if (response.operationId) {
+            response.totalProducts = response.operationId.totalProducts || 0;
+            response.scrapedProducts = response.operationId.scrapedProducts || 0;
+            response.failedProducts = response.operationId.failedProducts || 0;
+            response.duration = response.operationId.duration || 0;
+            response.progress = response.operationId.progress || { current: 0, total: 0, percentage: 0 };
+            response.errorMessage = response.operationId.errorMessage || null;
+            response.retryCount = response.operationId.retryCount || 0;
+            
+            // Calculate success rate
+            const totalProducts = response.totalProducts || 0;
+            const scrapedProducts = response.scrapedProducts || 0;
+            response.productSuccessRate = totalProducts > 0 ? 
+                Math.round((scrapedProducts / totalProducts) * 10000) / 100 : 0;
+            
+            // Add product statistics summary
+            response.productStats = {
+                total: totalProducts,
+                successful: scrapedProducts,
+                failed: response.failedProducts || 0,
+                successRate: response.productSuccessRate,
+                remaining: Math.max(0, totalProducts - scrapedProducts - (response.failedProducts || 0))
+            };
+        }
+
+        return res.json({ success: true, message: 'Scrape log updated', data: response });
     } catch (err) {
         console.error('Error patching scrape log:', err);
         return res.status(500).json({ success: false, message: 'Failed to patch scrape log', error: err.message });
@@ -522,6 +626,191 @@ router.get('/stats', async (req, res) => {
 	} catch (err) {
 		console.error('Error generating scrape logs stats:', err);
 		return res.status(500).json({ success: false, message: 'Failed to generate stats', error: err.message });
+	}
+});
+
+// Bulk update product statistics for multiple scrape logs
+router.patch('/bulk-update-stats', async (req, res) => {
+	try {
+		const { updates } = req.body;
+		
+		if (!Array.isArray(updates) || updates.length === 0) {
+			return res.status(400).json({ 
+				success: false, 
+				message: 'Updates array is required and must not be empty' 
+			});
+		}
+
+		const results = [];
+		
+		for (const update of updates) {
+			const { logId, totalProducts, scrapedProducts, failedProducts, progress, duration, errorMessage, retryCount } = update;
+			
+			if (!logId) {
+				results.push({ logId: null, success: false, error: 'logId is required' });
+				continue;
+			}
+
+			try {
+				// Find the scrape log
+				const log = await ScrapeLog.findById(logId);
+				if (!log) {
+					results.push({ logId, success: false, error: 'Scrape log not found' });
+					continue;
+				}
+
+				// Update the scrape log if it has an operationId
+				if (log.operationId) {
+					const operationUpdate = {};
+					if (totalProducts !== undefined) operationUpdate.totalProducts = totalProducts;
+					if (scrapedProducts !== undefined) operationUpdate.scrapedProducts = scrapedProducts;
+					if (failedProducts !== undefined) operationUpdate.failedProducts = failedProducts;
+					if (progress) operationUpdate.progress = progress;
+					if (duration !== undefined) operationUpdate.duration = duration;
+					if (errorMessage !== undefined) operationUpdate.errorMessage = errorMessage;
+					if (retryCount !== undefined) operationUpdate.retryCount = retryCount;
+
+					// Update the associated operation
+					await ScrapingOperation.findByIdAndUpdate(log.operationId, { $set: operationUpdate });
+				}
+
+				// Update the scrape log itself if needed
+				const logUpdate = {};
+				if (totalProducts !== undefined) logUpdate.totalProducts = totalProducts;
+				if (scrapedProducts !== undefined) logUpdate.scrapedProducts = scrapedProducts;
+				if (failedProducts !== undefined) logUpdate.failedProducts = failedProducts;
+				
+				if (Object.keys(logUpdate).length > 0) {
+					await ScrapeLog.findByIdAndUpdate(logId, { $set: logUpdate });
+				}
+
+				results.push({ logId, success: true, message: 'Updated successfully' });
+			} catch (err) {
+				results.push({ logId, success: false, error: err.message });
+			}
+		}
+
+		const successCount = results.filter(r => r.success).length;
+		const failureCount = results.filter(r => !r.success).length;
+
+		return res.json({
+			success: true,
+			message: `Bulk update completed: ${successCount} successful, ${failureCount} failed`,
+			data: {
+				total: results.length,
+				successful: successCount,
+				failed: failureCount,
+				results
+			}
+		});
+	} catch (err) {
+		console.error('Error in bulk update:', err);
+		return res.status(500).json({ 
+			success: false, 
+			message: 'Failed to perform bulk update', 
+			error: err.message 
+		});
+	}
+});
+
+// Get real-time statistics for dashboard
+router.get('/realtime-stats', async (req, res) => {
+	try {
+		const { platform, type, lastMinutes = 60 } = req.query;
+		
+		const match = {
+			when: { $gte: new Date(Date.now() - (parseInt(lastMinutes) * 60 * 1000)) }
+		};
+		
+		if (platform) match.platform = platform;
+		if (type) match.type = type;
+
+		// Get real-time statistics
+		const realtimeStats = await ScrapeLog.aggregate([
+			{ $match: match },
+			{
+				$lookup: {
+					from: 'scraping_operations',
+					localField: 'operationId',
+					foreignField: '_id',
+					as: 'operation'
+				}
+			},
+			{
+				$addFields: {
+					operation: { $arrayElemAt: ['$operation', 0] }
+				}
+			},
+			{
+				$group: {
+					_id: null,
+					totalOperations: { $sum: 1 },
+					activeOperations: { $sum: { $cond: [{ $in: ['$status', ['pending', 'in_progress']] }, 1, 0] } },
+					completedOperations: { $sum: { $cond: [{ $eq: ['$status', 'success'] }, 1, 0] } },
+					failedOperations: { $sum: { $cond: [{ $eq: ['$status', 'failed'] }, 1, 0] } },
+					totalProducts: { $sum: { $ifNull: ['$operation.totalProducts', 0] } },
+					scrapedProducts: { $sum: { $ifNull: ['$operation.scrapedProducts', 0] } },
+					failedProducts: { $sum: { $ifNull: ['$operation.failedProducts', 0] } },
+					avgDuration: { $avg: { $ifNull: ['$operation.duration', 0] } },
+					lastUpdate: { $max: '$when' }
+				}
+			}
+		]);
+
+		const stats = realtimeStats[0] || {
+			totalOperations: 0,
+			activeOperations: 0,
+			completedOperations: 0,
+			failedOperations: 0,
+			totalProducts: 0,
+			scrapedProducts: 0,
+			failedProducts: 0,
+			avgDuration: 0,
+			lastUpdate: null
+		};
+
+		// Calculate rates
+		const operationSuccessRate = stats.totalOperations > 0 ? 
+			Math.round((stats.completedOperations / stats.totalOperations) * 10000) / 100 : 0;
+		
+		const productSuccessRate = stats.totalProducts > 0 ? 
+			Math.round((stats.scrapedProducts / stats.totalProducts) * 10000) / 100 : 0;
+
+		// Get current active operations
+		const activeOps = await ScrapeLog.find({
+			status: { $in: ['pending', 'in_progress'] },
+			...(platform && { platform }),
+			...(type && { type })
+		}).populate('operationId').sort({ when: -1 }).limit(10);
+
+		return res.json({
+			success: true,
+			data: {
+				...stats,
+				operationSuccessRate,
+				productSuccessRate,
+				activeOperations: activeOps.map(op => ({
+					_id: op._id,
+					platform: op.platform,
+					type: op.type,
+					url: op.url,
+					status: op.status,
+					when: op.when,
+					progress: op.operationId?.progress || { current: 0, total: 0, percentage: 0 },
+					totalProducts: op.operationId?.totalProducts || 0,
+					scrapedProducts: op.operationId?.scrapedProducts || 0,
+					failedProducts: op.operationId?.failedProducts || 0
+				})),
+				generatedAt: new Date().toISOString()
+			}
+		});
+	} catch (err) {
+		console.error('Error generating real-time stats:', err);
+		return res.status(500).json({ 
+			success: false, 
+			message: 'Failed to generate real-time stats', 
+			error: err.message 
+		});
 	}
 });
 
